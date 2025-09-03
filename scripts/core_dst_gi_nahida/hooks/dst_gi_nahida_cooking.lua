@@ -1,0 +1,60 @@
+---
+--- dst_gi_nahida_cooking.lua
+--- Description: 纳西妲的食物
+--- Author: 没有小钱钱
+--- Date: 2025/5/2 3:46
+---
+----- fruit: 果度，表示食材的水果属性。影响食材在制作果类食物时的表现。
+---- monster: 怪物度，表示食材的怪物属性。通常用于怪物肉等食材，可能会对食物的效果产生负面影响。
+---- sweetener: 甜度，表示食材的甜味属性。用于制作甜点类食物。
+---- veggie: 蔬菜度，表示食材的蔬菜属性。影响食材在制作蔬菜类食物时的表现。
+---- meat: 肉度，表示食材的肉类属性。影响食材在制作肉类食物时的表现。
+---- fish: 鱼度，表示食材的鱼类属性。用于制作鱼类食物。
+---- egg: 蛋度，表示食材的蛋类属性。用于制作蛋类食物。
+---- decoration: 装饰度，表示食材的装饰属性。通常用于装饰性食材，可能影响食物的外观或特殊效果。
+---- fat: 脂肪度，表示食材的脂肪属性。用于制作需要脂肪的食物。
+---- dairy: 乳制品度，表示食材的乳制品属性。用于制作乳制品类食物。
+---- inedible: 不可食用度，表示食材不可直接食用。通常用于非食物物品。
+---- seed: 种子度，表示食材的种子属性。用于种植或制作种子类食物。
+---- magic: 魔法度，表示食材的魔法属性。用于制作具有魔法效果的食物。
+--椰子肉
+AddIngredientValues({"dst_gi_nahida_coconut_meat"}, {fruit = 1, veggie = 0.5}, true)
+-- 花瓣可以入锅
+AddIngredientValues({"petals"}, {decoration = 1}, true)
+
+-- 定义食谱列表
+--local cookerRecipes = {
+--    {
+--        test = function(cooker, names, tags)
+--            -- 料理的测试函数，条件进行数值比较前必须判空
+--            --  枣椰 1 花瓣 1 甜度 >=1 果度 >=1
+--            return (names.dst_gi_nahida_coconut_meat or 0) >= 1
+--                    and (names.petals or 0) >= 1
+--                    and (tags.sweetener or 0) >= 1
+--                    and (tags.fruit or 0) >= 1
+--        end,
+--        weight = 10, -- 食谱权重
+--        priority = 99, -- @Runar: 料理优先级，严格的测试函数配合设定合理的料理优先级才能铸就好的料理。无端99还条件简单的无疑是给自己和其他模组添麻烦
+--        foodtype = FOODTYPE.GOODIES, -- 食物类型
+--        perishtime = 15, --腐烂时间/天
+--        hunger = 45,
+--        sanity = 40,
+--        health = 20,
+--        cooktime = 10, -- 烹饪时间/s
+--        maxstacksize = 60,
+--        overridebuild = "dst_gi_nahida_foods",
+--        potlevel = "low",
+--        cookbook_category = "cookpot",
+--    }
+--    -- 你可以在这里添加更多的食谱
+--}
+--
+--
+---- 遍历食谱列表和锅列表并添加食谱
+--
+--for _, recipe in ipairs(cookerRecipes) do
+--    AddCookerRecipe("cookpot", recipe)
+--    AddCookerRecipe("portablecookpot", recipe)
+--    AddCookerRecipe("archive_cookpot", recipe)
+--end
+
