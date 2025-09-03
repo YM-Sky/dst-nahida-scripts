@@ -65,15 +65,29 @@ local function h_cursable(Cursable)
 end
 ---------------------------------------------------------------------------
 ---------------------------------------------------------------------------
-local function onload(inst,data)
-	inst:ListenForEvent('ms_respawnedfromghost', onbecamehuman)
-	inst:ListenForEvent('ms_becameghost', onbecameghost)
+local function onload(inst, data)
+    -- 验证关键组件是否存在
+    local critical_components = {
+        "dst_gi_nahida_skill",
+        "dst_gi_nahida_data",
+        "dst_gi_nahida_actions_data"
+    }
 
-	if inst:HasTag('playerghost') then
-		onbecameghost(inst)
-	else
-		onbecamehuman(inst)
-	end
+    for _, comp_name in ipairs(critical_components) do
+        if not inst.components[comp_name] then
+            print("Critical component missing during load:", comp_name)
+            inst:AddComponent(comp_name)
+        end
+    end
+
+    inst:ListenForEvent('ms_respawnedfromghost', onbecamehuman)
+    inst:ListenForEvent('ms_becameghost', onbecameghost)
+
+    if inst:HasTag('playerghost') then
+        onbecameghost(inst)
+    else
+        onbecamehuman(inst)
+    end
 end
 ---------------------------------------------------------------------------
 ---------------------------------------------------------------------------

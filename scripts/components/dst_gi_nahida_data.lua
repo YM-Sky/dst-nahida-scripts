@@ -323,15 +323,26 @@ end
 
 -- 加载能量和冷却时间的状态
 function dst_gi_nahida_data:OnLoad(data)
-    if data.oversized_pick_num then
-        self.oversized_pick_num = data.oversized_pick_num
+    -- 验证并设置默认值
+    if data and type(data) == "table" then
+        -- 验证数值字段
+        if type(data.oversized_pick_num) == "number" and data.oversized_pick_num >= 0 then
+            self.oversized_pick_num = data.oversized_pick_num
+        end
+
+        if type(data.farm_plant_pick_num) == "number" and data.farm_plant_pick_num >= 0 then
+            self.farm_plant_pick_num = data.farm_plant_pick_num
+        end
+
+        if type(data.nahida_fateseat_level) == "number" and data.nahida_fateseat_level >= 0 then
+            self.nahida_fateseat_level = data.nahida_fateseat_level
+        end
     end
-    if data.farm_plant_pick_num then
-        self.farm_plant_pick_num = data.farm_plant_pick_num
-    end
-    if data.nahida_fateseat_level then
-        self.nahida_fateseat_level = data.nahida_fateseat_level
-    end
+
+    -- 确保所有字段都有有效值
+    self.oversized_pick_num = self.oversized_pick_num or 0
+    self.farm_plant_pick_num = self.farm_plant_pick_num or 0
+    self.nahida_fateseat_level = self.nahida_fateseat_level or 0
 end
 
 function dst_gi_nahida_data:getData()

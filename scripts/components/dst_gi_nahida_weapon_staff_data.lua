@@ -389,15 +389,46 @@ function dst_gi_nahida_weapon_staff_data:OnSave()
 end
 
 function dst_gi_nahida_weapon_staff_data:OnLoad(data)
-    if data and data.current_model then
-        self.current_model = data.current_model
+    -- 验证模式数据
+    if data and data.current_model and type(data.current_model) == "string" then
+        -- 验证模式是否在有效列表中
+        local valid_mode = false
+        for _, mode in pairs(self.WEAPON_STAFF_MODE) do
+            if mode == data.current_model then
+                valid_mode = true
+                break
+            end
+        end
+        if valid_mode then
+            self.current_model = data.current_model
+        else
+            self.current_model = self.WEAPON_STAFF_MODE[1] -- 默认第一个模式
+        end
+    else
+        self.current_model = self.WEAPON_STAFF_MODE[1]
     end
 
-    -- 🔥 使用安全合并
+    -- 安全合并active_data
     local loaded_active_data = data and data.active_data or nil
-    self.active_data = self:MergeActiveData(loaded_active_data)
+    local success, merged_data = pcall(function()
+        return self:MergeActiveData(loaded_active_data)
+    end)
 
-    self:InIt()
+    if success then
+        self.active_data = merged_data
+    else
+        print("Active data merge failed, using defaults")
+        self.active_data = self:GetDefaultActiveData()
+    end
+
+    -- 安全初始化
+    local init_success, init_err = pcall(function()
+        self:InIt()
+    end)
+
+    if not init_success then
+        print("Staff init failed:", init_err)
+    end
 end
 
 function dst_gi_nahida_weapon_staff_data:getData()

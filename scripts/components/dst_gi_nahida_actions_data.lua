@@ -547,15 +547,26 @@ end
 
 -- 修改 OnLoad 函数
 function dst_gi_nahida_actions_data:OnLoad(data)
-    if data and data.pick_up_cd then
+    -- 强化数据验证
+    if not data or type(data) ~= "table" then
+        self.pick_up_cd = 0
+        self.pick_up_prefab_data = nil
+        return
+    end
+
+    -- 验证 pick_up_cd 数据
+    if data.pick_up_cd and type(data.pick_up_cd) == "number" and
+            data.pick_up_cd >= 0 and data.pick_up_cd < 999999 then
         self.pick_up_cd = data.pick_up_cd
-        -- 重启冷却任务
         if self.pick_up_cd > 0 then
             self:StartPickUpCdTask(self.pick_up_cd)
         end
+    else
+        self.pick_up_cd = 0
     end
-    -- pick_up_prefab_data 需要在运行时重新设置
-    -- 不从存档加载
+
+    -- 确保运行时数据重置
+    self.pick_up_prefab_data = nil
 end
 
 -- 添加清理函数

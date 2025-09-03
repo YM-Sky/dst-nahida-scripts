@@ -197,19 +197,46 @@ function dst_gi_nahida_backpack_data:getData()
 end
 
 function dst_gi_nahida_backpack_data:OnLoad(data)
-    if data.backpack_data == nil then
-        data.backpack_data = {}
-    end
-    for prefab, _ in pairs(self.backpack_init_data) do
-        if data.backpack_data[prefab] == nil then
-            data.backpack_data[prefab] = { count = 0 }
+    -- 强化数据验证
+    if not data or type(data) ~= "table" or not data.backpack_data or type(data.backpack_data) ~= "table" then
+        -- 重置为默认数据
+        for prefab, _ in pairs(self.backpack_init_data) do
+            self.backpack_data[prefab] = { count = 0 }
         end
-        self.backpack_data[prefab] = data.backpack_data[prefab]
+        self:net_data(self.backpack_data)
+        self:Init()
+        return
     end
-    -- 设置面板值
-    -- 初始化数据
-    self:net_data(self.backpack_data)
-    self:Init()
+
+    for prefab, _ in pairs(self.backpack_init_data) do
+        if not data.backpack_data[prefab] or type(data.backpack_data[prefab]) ~= "table" then
+            self.backpack_data[prefab] = { count = 0 }
+        else
+            -- 验证count字段
+            local count = data.backpack_data[prefab].count
+            if type(count) ~= "number" or count < 0 or count ~= count then -- 检查NaN
+                self.backpack_data[prefab] = { count = 0 }
+            else
+                self.backpack_data[prefab] = data.backpack_data[prefab]
+            end
+        end
+    end
+
+    -- 安全调用网络同步
+    local success, err = pcall(function()
+        self:net_data(self.backpack_data)
+        self:Init()
+    end)
+
+    if not success then
+        print("Nahida backpack data sync failed:", err)
+        -- 重置为安全状态
+        for prefab, _ in pairs(self.backpack_init_data) do
+            self.backpack_data[prefab] = { count = 0 }
+        end
+        self:net_data(self.backpack_data)
+        self:Init()
+    end
 end
 
 function dst_gi_nahida_backpack_data:SaveData(data)

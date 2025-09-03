@@ -246,9 +246,18 @@ end
 
 --加载数据
 local function OnLoad(inst, data)
-    if data and data.whether_to_follow ~= nil then
-        inst.whether_to_follow = data.whether_to_follow
-        inst.net_dst_gi_nahida_thousand_floating_dreams_whether_to_follow:set(inst.whether_to_follow)
+    if data and type(data) == "table" and data.whether_to_follow ~= nil then
+        -- 验证数据类型
+        if type(data.whether_to_follow) == "boolean" then
+            inst.whether_to_follow = data.whether_to_follow
+            inst.net_dst_gi_nahida_thousand_floating_dreams_whether_to_follow:set(inst.whether_to_follow)
+        else
+            inst.whether_to_follow = false
+            inst.net_dst_gi_nahida_thousand_floating_dreams_whether_to_follow:set(false)
+        end
+    else
+        inst.whether_to_follow = false
+        inst.net_dst_gi_nahida_thousand_floating_dreams_whether_to_follow:set(false)
     end
 end
 -- 上面这俩装备函数是给实际的法器装备的
