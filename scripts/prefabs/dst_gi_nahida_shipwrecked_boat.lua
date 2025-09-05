@@ -288,6 +288,14 @@ local function BoatSalvage(inst, data)
                 elseif ent:HasTag("nahida_salvage_item") then
                     local item = SpawnPrefab(ent.prefab)
                     if data.doer and item then
+                        if ent.components.container and item.components.container then
+                            local items = ent.components.container:GetAllItems()
+                            if #items > 0 then
+                                for _, _item in ipairs(items) do
+                                    item.components.container:GiveItem(_item)
+                                end
+                            end
+                        end
                         local x1, y1, z1 = data.doer.Transform:GetWorldPosition()
                         item.Transform:SetPosition(x1 + 1, y1, z1 + 1)  -- 使用 x 轴偏移
                         ent:Remove()  -- 移除树苗物品

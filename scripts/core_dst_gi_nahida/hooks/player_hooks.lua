@@ -216,12 +216,17 @@ local function OnEat(inst, data)
     end
     if data.food and data.food.components.edible then
         local sanity_delta = data.food.components.edible.sanityvalue
+        local health_delta = data.food.components.edible.healthvalue
         -- 检查食物是否是鱼类相关
         if IsFishRelated(data.food) then
             -- 计算扣除的理智值
             if sanity_delta > 0 then
                 local sanity_loss = sanity_delta < 10 and 10 or sanity_delta * 2
                 inst.components.sanity:DoDelta(-sanity_loss)
+            end
+            -- 计算扣除的血量值
+            if health_delta > 0 then
+                inst.components.health:DoDelta(-health_delta)
             end
         end
     end

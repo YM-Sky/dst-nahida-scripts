@@ -91,16 +91,18 @@ local function rockAttack(inst,point,x, y, z)
                             selected_gems = gem_loots
                         end
                         if rock.prefab ~= "rock_avocado_fruit" then
-                            -- 添加非宝石战利品
-                            for k, loot in ipairs(other_loots) do
-                                rock.components.lootdropper:AddChanceLoot(loot.prefab, loot.chance)
-                            end
-                            -- 添加随机选择的宝石
-                            for k, loot in ipairs(selected_gems) do
-                                rock.components.lootdropper:AddChanceLoot(loot.prefab, loot.chance)
+                            if rock.addLoot == nil or rock.addLoot == false then
+                                -- 添加非宝石战利品
+                                for k, loot in ipairs(other_loots) do
+                                    rock.components.lootdropper:AddChanceLoot(loot.prefab, loot.chance)
+                                end
+                                -- 添加随机选择的宝石
+                                for k, loot in ipairs(selected_gems) do
+                                    rock.components.lootdropper:AddChanceLoot(loot.prefab, loot.chance)
+                                end
+                                rock.addLoot = true
                             end
                         end
-                        -- 添加彩虹宝石 1% 掉落
                         rock.components.workable:WorkedBy(inst, 20)
                     end
                 end
@@ -204,6 +206,12 @@ local function fn()
     inst.SetRange = SetRange
     inst.SetOnAttack = SetOnAttack
     inst.InitTask = InitTask
+
+    inst.OnLoad = function(data)
+        if inst.task == nil then
+            inst:Remove()
+        end
+    end
 
     return inst
 end

@@ -198,6 +198,7 @@ function dst_gi_nahida_data:OnAttack(target)
             target.components.combat:SetTarget(self.inst)
             target:DoTaskInTime(self.aggro_cooldown, function()
                 if target:IsValid()
+                        and target.components.combat
                         and target.components.combat.target
                         and target.components.combat.target:HasTag("player")
                         and target.components.combat.target.userid == self.inst.userid
